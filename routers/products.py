@@ -38,6 +38,7 @@ class Product(BaseModel):
 
 @router.get("/")
 async def get_all_products(db: Session = Depends(get_db)):
+    # TODO User,Admin jwt 추가 예정
     # TODO 검색조건 추가 예정
     products = db.query(models.Product).all()
     dto_list: [Product] = []
@@ -52,6 +53,7 @@ async def get_all_products(db: Session = Depends(get_db)):
 
 @router.get("/{index_no}")
 async def get_product(index_no: int, db: Session = Depends(get_db)):
+    # TODO User,Admin jwt 추가 예정
     product = db.query(models.Product).filter(models.Product.index_no == index_no).first()
     if product is None:
         raise http_exception()
@@ -68,7 +70,6 @@ async def get_product(index_no: int, db: Session = Depends(get_db)):
 
 @router.post("/")
 async def create_product(product: Product, db: Session = Depends(get_db)):
-
     # TODO 관리자 토큰에만 적용 예정
     db_product = models.Product(item_name=product.item_name,\
                                 item_code=product.item_code,\
@@ -133,8 +134,10 @@ def domain_to_dto_product(product: models.Product):
         price=product.price
     )
 
+
 def domain_to_dto_image(image: models.Image):
     return Image(
         path=image.path,
         image_size=image.image_size
     )
+
