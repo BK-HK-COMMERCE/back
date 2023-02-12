@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Body, Depends, HTTPException
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
-from fastapi.encoders import jsonable_encoder
+from sqlalchemy.orm import Session, registry
 
 import models
 from config.database import SessionLocal
 
+mapper_registry = registry()
 
 router = APIRouter(
     prefix="/products",
@@ -21,48 +21,72 @@ def get_db():
         db.close()
 
 
+class Image(BaseModel):
+    path: str
+    image_size: int
+
+
+# TODO 카테고리 추가 예정 (최대 4개)
 class Product(BaseModel):
     item_name: str
     item_code: str
     size: str
     description: str
     price: float
-    img: str
-
+    img: list[Image] = []
 
 
 @router.get("/")
 async def get_all_products(db: Session = Depends(get_db)):
+    # TODO 검색조건 추가 예정
     products = db.query(models.Product).all()
     return {"response": products}
 
 
 @router.get("/{index_no}")
 async def get_product(index_no: int, db: Session = Depends(get_db)):
-    product = db.query(models.Product)\
-        .filter(models.Product.index_no == index_no)\
-        .first()
-    if product is not None:
-        return product
-    raise http_exception()
+    product = db.query(models.Product).filter(models.Product.index_no == index_no).first()
+    if product is None:
+        raise http_exception()
+    product_dto = domain_to_dto_product(product)
+
+    images = db.query(models.Image).filter(models.Image.product_id == product.index_no).all()
+
+    for image in images:
+        product_dto.img.append(domain_to_dto_image(image))
+
+    return product_dto
+
 
 
 @router.post("/")
 async def create_product(product: Product, db: Session = Depends(get_db)):
+
+    # TODO 관리자 토큰에만 적용 예정
     db_product = models.Product(item_name=product.item_name,\
                                 item_code=product.item_code,\
                                 size=product.size,\
                                 description=product.description,\
-                                price=product.price,\
-                                img=product.img)
+                                price=product.price)
     db.add(db_product)
     db.commit()
     db.refresh(db_product)
+    for i in product.img:
+        db_image = models.Image(
+            path=i.path,
+            image_size=i.image_size,
+            product_id=db_product.index_no
+        )
+        db.add(db_image)
+        print(db_image)
+    print(db_product)
+    db.commit()
     return {"response": db_product}
 
 
 @router.delete("/")
 async def delete_product(index_no: int = Body(), db: Session = Depends(get_db)):
+    # TODO 관리자 토큰에만 적용 예정
     db_product = db.query(models.Product.index_no == index_no)
     if db_product is None:
         raise http_exception()
@@ -73,6 +97,7 @@ async def delete_product(index_no: int = Body(), db: Session = Depends(get_db)):
 
 # @router.put("/")
 # async def update_product(product: Product, index_no: int, db: Session = Depends(get_db)):
+#    # TODO 관리자 토큰에만 적용 예정
 #     db_product = db.query(models.Product.index_no == index_no).first()
 #     if db_product is None:
 #         raise http_exception()
@@ -87,3 +112,19 @@ async def delete_product(index_no: int = Body(), db: Session = Depends(get_db)):
 
 def http_exception():
     raise HTTPException(status_code=404, detail="PRODUCT NOT FOUND")
+
+
+def domain_to_dto_product(product: models.Product):
+    return Product(
+        item_name=product.item_name,
+        item_code=product.item_code,
+        size=product.size,
+        description=product.description,
+        price=product.price
+    )
+
+def domain_to_dto_image(image: models.Image):
+    return Image(
+        path = image.path,
+        image_size = image.image_size
+    )
