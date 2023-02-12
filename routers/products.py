@@ -40,7 +40,14 @@ class Product(BaseModel):
 async def get_all_products(db: Session = Depends(get_db)):
     # TODO 검색조건 추가 예정
     products = db.query(models.Product).all()
-    return {"response": products}
+    dto_list: [Product] = []
+    for product in products:
+        product_dto = domain_to_dto_product(product)
+        images = db.query(models.Image).filter(models.Image.product_id == product.index_no).all()
+        for image in images:
+            product_dto.img.append(domain_to_dto_image(image))
+        dto_list.append(product_dto)
+    return {"response": dto_list}
 
 
 @router.get("/{index_no}")
