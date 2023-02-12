@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
 from sqlalchemy.orm import Session, registry
 
 import models
@@ -94,12 +94,15 @@ async def create_product(product: Product, db: Session = Depends(get_db)):
 @router.delete("/")
 async def delete_product(index_no: int = Body(), db: Session = Depends(get_db)):
     # TODO 관리자 토큰에만 적용 예정
-    db_product = db.query(models.Product.index_no == index_no)
+    db_product = db.query(models.Product).filter(models.Product.index_no == index_no).first()
     if db_product is None:
         raise http_exception()
+    images = db.query(models.Image).filter(models.Image.product_id == db_product.index_no).all()
+    for image in images:
+        db.delete(image)
     db.delete(db_product)
     db.commit()
-    return f"product {index_no} is deleted"
+    return f"product {index_no} and images are deleted"
 
 
 # @router.put("/")
@@ -132,6 +135,6 @@ def domain_to_dto_product(product: models.Product):
 
 def domain_to_dto_image(image: models.Image):
     return Image(
-        path = image.path,
-        image_size = image.image_size
+        path=image.path,
+        image_size=image.image_size
     )
