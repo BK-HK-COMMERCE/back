@@ -1,11 +1,9 @@
 from fastapi import APIRouter, Body, Depends, HTTPException
-from pydantic import BaseModel,Field
-from sqlalchemy.orm import Session, registry
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
 import models
-from config.database import SessionLocal
-
-mapper_registry = registry()
+from database import get_db
 
 router = APIRouter(
     prefix="/products",
@@ -13,27 +11,10 @@ router = APIRouter(
 )
 
 
-def get_db():
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
-
 
 class Image(BaseModel):
     path: str
     image_size: int
-
-
-# TODO 카테고리 추가 예정 (최대 4개)
-class Product(BaseModel):
-    item_name: str
-    item_code: str
-    size: str
-    description: str
-    price: float
-    img: list[Image] = []
 
 
 @router.get("/")
@@ -71,10 +52,10 @@ async def get_product(index_no: int, db: Session = Depends(get_db)):
 @router.post("/")
 async def create_product(product: Product, db: Session = Depends(get_db)):
     # TODO 관리자 토큰에만 적용 예정
-    db_product = models.Product(item_name=product.item_name,\
-                                item_code=product.item_code,\
-                                size=product.size,\
-                                description=product.description,\
+    db_product = models.Product(item_name=product.item_name, \
+                                item_code=product.item_code, \
+                                size=product.size, \
+                                description=product.description, \
                                 price=product.price)
     db.add(db_product)
     db.commit()
