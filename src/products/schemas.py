@@ -9,3 +9,15 @@ class ProductBase(BaseModel):
     description: str
     price: float
     category1: Category1
+
+    class Config:
+        orm_mode = True
+
+
+class ProductBaseInput(BaseModel):
+    item_name: str
+    size: Size
+    description: str
+    price: float
+    category1: Category1
+
