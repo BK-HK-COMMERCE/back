@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, Body, Query
+from fastapi import APIRouter, Depends, HTTPException, Body, Query, Path
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -17,6 +17,14 @@ router = APIRouter(
 def get_all_products(db: Session = Depends(get_db)):
     products = db.query(Product).all()
     return products
+
+
+@router.get("/{index_no}", response_model=ProductBase)
+def get_product_by_index_no(db: Session = Depends(get_db), index_no: int = Path()):
+    db_product = db.query(Product).filter(Product.index_no == index_no).first()
+    if db_product is None:
+        raise HTTPException(404, "Product is not found")
+    return db_product
 
 
 @router.post("/")
