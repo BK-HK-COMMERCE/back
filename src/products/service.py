@@ -65,6 +65,13 @@ def delete_product_by_index_no(db: Session, index_no: int):
 
 
 def update_product_by_index_no(db: Session, index_no: int, product_base: ProductBaseInput):
+    """
+    Product 업데이트
+    :param db:
+    :param index_no:
+    :param product_base:
+    :return:
+    """
     db_product = db.query(Product).filter(Product.index_no == index_no).first()
     if db_product is None:
         raise HTTPException(404, "Product is not found")
