@@ -20,3 +20,19 @@ class Category1(DispatchEnum):
     FEMALE = "FEMALE"
     CHILDREN = "CHILDREN"
     UNISEX = "UNISEX"
+
+
+class Category2(DispatchEnum):
+    OUTER = "OUTER"
+    TOP = "TOP"
+    PANTS = "PANT"
+    SHOES = "SHOES"
+    UNDERWEAR = "UNDERWEAR"
+
+
+class Category3(DispatchEnum):
+    COAT = "COAT"
+    VEST = "VEST"
+    CARDIGAN = "CARDIGAN"
+    LEATHER = "LEATHER"
+

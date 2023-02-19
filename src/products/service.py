@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 from src.products.models import Product
 from src.products.schemas import ProductBaseInput
 from fastapi import HTTPException
-from fastapi.encoders import jsonable_encoder
 
 
 
@@ -40,7 +39,8 @@ def add_product(db: Session, product_base: ProductBaseInput):
         size=product_base.size,
         description=product_base.description,
         price=product_base.price,
-        category1=product_base.category1
+        category1=product_base.category1,
+        category2=product_base.category2
     )
     db.add(db_product)
     db.commit()

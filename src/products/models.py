@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Enum, Numeric, Text
 
 from database import Base
-from src.products.enums import Size, Category1
+from src.products.enums import Size, Category1, Category2
 import uuid
 
 
@@ -15,6 +15,7 @@ class Product(Base):
     description = Column(Text)
     price = Column(Numeric(10, 2), nullable=False)
     category1 = Column(Enum(Category1), nullable=False)
+    category2 = Column(Enum(Category2), nullable=False)
 
 
 

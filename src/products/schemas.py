@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from src.products.enums import Size, Category1
+from src.products.enums import Size, Category1, Category2
 
 
 class ProductBase(BaseModel):
@@ -9,6 +9,7 @@ class ProductBase(BaseModel):
     description: str
     price: float
     category1: Category1
+    category1: Category2
 
     class Config:
         orm_mode = True
@@ -20,6 +21,7 @@ class ProductBaseInput(BaseModel):
     description: str
     price: float
     category1: Category1
+    category1: Category2
 
     class Config:
         orm_mode = True
