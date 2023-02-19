@@ -21,3 +21,6 @@ class ProductBaseInput(BaseModel):
     price: float
     category1: Category1
 
+    class Config:
+        orm_mode = True
+

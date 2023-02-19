@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from src.products.models import Product
 from src.products.schemas import ProductBaseInput
 from fastapi import HTTPException
+from fastapi.encoders import jsonable_encoder
+
 
 
 def get_all_products(db: Session):
@@ -60,6 +62,23 @@ def delete_product_by_index_no(db: Session, index_no: int):
 
     db.delete(db_product)
     db.commit()
+
+
+def update_product_by_index_no(db: Session, index_no: int, product_base: ProductBaseInput):
+    db_product = db.query(Product).filter(Product.index_no == index_no).first()
+    if db_product is None:
+        raise HTTPException(404, "Product is not found")
+    update_data = product_base.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_product, key, value)
+
+    db.add(db_product)
+    db.commit()
+    db.refresh(db_product)
+    return db_product
+
+
+
 
 
 

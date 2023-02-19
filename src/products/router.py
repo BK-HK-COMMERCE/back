@@ -7,7 +7,7 @@ from database import get_db
 from src.products.models import Product
 from src.products.schemas import ProductBase, ProductBaseInput
 
-from src.products.service import get_all_products, get_product_by_index_no, add_product, delete_product_by_index_no
+from src.products.service import *
 
 
 router = APIRouter(
@@ -37,7 +37,20 @@ def create_product(db: Session = Depends(get_db), product_base: ProductBaseInput
 
 
 @router.delete("/{index_no}")
-def delete_product(db: Session = Depends(get_db), index_no: int = Query()):
+def delete_product(db: Session = Depends(get_db), index_no: int = Path()):
     delete_product_by_index_no(db, index_no)
     return {"response": f"{index_no} Product is deleted"}
+
+
+@router.put("/{index_no}")
+def update_product(db: Session = Depends(get_db),
+                   index_no: int = Path(),
+                   product_base: ProductBaseInput = Body()):
+    updated_product: ProductBase = update_product_by_index_no(db, index_no, product_base)
+
+    return {
+        "response": f"{index_no} Product is updated",
+        "updated_product": updated_product
+    }
+
 
