@@ -3,7 +3,8 @@ import uuid
 from sqlalchemy.orm import Session
 from src.products.models import Product
 from src.products.schemas import ProductBaseInput
-from fastapi import HTTPException
+
+from src.products.exceptions import *
 
 
 
@@ -23,7 +24,10 @@ def get_product_by_index_no(db: Session, index_no: int):
     :param index_no:
     :return:
     """
-    return db.query(Product).filter(Product.index_no == index_no).first()
+    db_product = db.query(Product).filter(Product.index_no == index_no).first()
+    if db_product is None:
+        raise product_not_found()
+    return db_product
 
 
 def add_product(db: Session, product_base: ProductBaseInput):
@@ -60,8 +64,7 @@ def delete_product_by_index_no(db: Session, index_no: int):
     """
     db_product = db.query(Product).filter(Product.index_no == index_no).first()
     if db_product is None:
-        raise HTTPException(404, "Product is not found")
-
+        raise product_not_found()
     db.delete(db_product)
     db.commit()
 
@@ -76,7 +79,7 @@ def update_product_by_index_no(db: Session, index_no: int, product_base: Product
     """
     db_product = db.query(Product).filter(Product.index_no == index_no).first()
     if db_product is None:
-        raise HTTPException(404, "Product is not found")
+        raise product_not_found()
     update_data = product_base.dict(exclude_unset=True)
     for key, value in update_data.items():
         setattr(db_product, key, value)
