@@ -36,3 +36,21 @@ class Category3(DispatchEnum):
     CARDIGAN = "CARDIGAN"
     LEATHER = "LEATHER"
 
+    TSHIRT = "TSHIRT"
+    SHIRT = "SHIRT"
+    HOODIES = "HOODIES"
+    SWEATSHIRT = "SWEATSHIRT"
+    DRESS = "DRESS"
+
+    SHORT = "SHORT"
+    JEANS = "JEANS"
+    SKIRT = "SKIRT"
+
+    BOOTS = "BOOTS"
+    SNEAKERS = "SNEAKERS"
+    SANDALS = "SANDALS"
+
+    PANTIES = "PANTIES"
+    BRA = "BRA"
+
+

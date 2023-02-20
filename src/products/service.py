@@ -40,7 +40,9 @@ def add_product(db: Session, product_base: ProductBaseInput):
         description=product_base.description,
         price=product_base.price,
         category1=product_base.category1,
-        category2=product_base.category2
+        category2=product_base.category2,
+        category3=product_base.category3,
+        likes=0
     )
     db.add(db_product)
     db.commit()
