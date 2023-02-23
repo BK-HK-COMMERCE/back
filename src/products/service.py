@@ -1,10 +1,9 @@
 import uuid
 
 from sqlalchemy.orm import Session
-from src.products.models import Product
 from src.products.schemas import ProductBaseInput
-
 from src.products.exceptions import *
+from models import Product
 
 
 
