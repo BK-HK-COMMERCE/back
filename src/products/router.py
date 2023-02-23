@@ -51,3 +51,12 @@ def update_product(db: Session = Depends(get_db),
     }
 
 
+@router.put("/like/{index_no}")
+def like_product(db: Session = Depends(get_db),
+                 index_no: int = Path()):
+    db_product = service.like_product(db, index_no)
+    return {
+        "response": f"{db_product.item_name}'s like : {db_product.likes}"
+    }
+
+

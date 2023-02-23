@@ -89,7 +89,21 @@ def update_product_by_index_no(db: Session, index_no: int, product_base: Product
     return db_product
 
 
-
-
-
+def like_product(db: Session, index_no: int):
+    """
+    Product Index_no  로 Likes ++
+    :param db:
+    :param index_no:
+    :return:
+    """
+    # TODO 계정마다 Like 하나마 누를 수 있게 추가
+    db_product = db.query(Product).filter(Product.index_no == index_no).first()
+    if not db_product:
+        raise product_not_found()
+    cur_likes = db_product.likes
+    db_product.likes = cur_likes + 1
+    db.add(db_product)
+    db.commit()
+    db.refresh(db_product)
+    return db_product
 
