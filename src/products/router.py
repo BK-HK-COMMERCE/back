@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, Body, Query, Path
+from fastapi import APIRouter, Depends, HTTPException, Body, Query, Path, Form
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -9,7 +9,7 @@ from src.products import service, schemas
 
 router = APIRouter(
     prefix="/products",
-    tags=["/products"]
+    tags=["products"]
 )
 
 

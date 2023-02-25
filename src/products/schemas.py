@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from src.products.enums import Size, Category1, Category2, Category3
+from src.images.schemas import  ImageBase
 
 
 class ProductBase(BaseModel):
@@ -12,6 +13,8 @@ class ProductBase(BaseModel):
     category2: Category2
     category3: Category3
     likes: int
+
+    images: list[ImageBase] = []
 
     class Config:
         orm_mode = True
