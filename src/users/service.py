@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from models import User
 from src.users import schemas, utils, exceptions
+from fastapi.encoders import jsonable_encoder
 
 import datetime
 
@@ -65,7 +66,9 @@ def login(db: Session, login_input: schemas.LoginInput):
     if not utils.verify_password(login_input.password, db_user.password):
         raise exceptions.login_fail()
 
+    data: schemas.Token = jsonable_encoder(db_user, exclude_unset=True)
+
+    token = schemas.Token(**data)
+
     # TODO token으로 변경할 예정
-
-    return db_user
-
+    return utils.create_access_token(token, None)

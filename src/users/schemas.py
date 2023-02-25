@@ -41,3 +41,6 @@ class Token(BaseModel):
     phone: str
     address: str
     post_code: str
+
+    class Config:
+        orm_mode = True
