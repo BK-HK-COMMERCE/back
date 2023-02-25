@@ -50,3 +50,22 @@ def get_user(db: Session, user_id: str):
         raise exceptions.user_not_found()
     return db_user
 
+
+def login(db: Session, login_input: schemas.LoginInput):
+    """
+    로그인 후 토큰 전달
+    :param db:
+    :param login_input:
+    :return:
+    """
+    db_user: User = db.query(User).filter(User.user_id == login_input.user_id).first()
+    if not db_user:
+        raise exceptions.login_fail()
+
+    if not utils.verify_password(login_input.password, db_user.password):
+        raise exceptions.login_fail()
+
+    # TODO token으로 변경할 예정
+
+    return db_user
+

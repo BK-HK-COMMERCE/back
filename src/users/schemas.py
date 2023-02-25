@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class UserBase(BaseModel):
@@ -27,3 +27,17 @@ class UserBaseInput(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class LoginInput(BaseModel):
+    user_id: str
+    password: str
+
+
+class Token(BaseModel):
+    user_id: str
+    name: str
+    email: str
+    phone: str
+    address: str
+    post_code: str
