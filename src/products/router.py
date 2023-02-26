@@ -13,9 +13,10 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=list[schemas.ProductBase])
-def all_products(db: Session = Depends(get_db)):
-    products = service.get_all_products(db)
+@router.get("/")
+def all_products(db: Session = Depends(get_db),
+                 page: int = Query(default=0, ge=0)):
+    products = service.get_all_products(db, page)
     return products
 
 

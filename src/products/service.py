@@ -7,14 +7,22 @@ from models import Product
 
 
 
-def get_all_products(db: Session):
+def get_all_products(db: Session, page: int):
     """
     전체 Product 조회
     :param db:
+    :param page:페이지
     :return:
     """
-    return db.query(Product).all()
-
+    search_products = db.query(Product).limit(20).offset(page).all()
+    total_products = db.query(Product).count()
+    total_pages = (total_products // 20) + 1
+    return {
+        "list": search_products,
+        "total_products": total_products,
+        "total_pages": total_pages,
+        "current_page": page+1
+    }
 
 def get_product_by_index_no(db: Session, index_no: int):
     """
