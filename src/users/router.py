@@ -11,6 +11,7 @@ router = APIRouter(
 
 @router.get("/", response_model=list[schemas.UserBase])
 def get_all_users(db: Session = Depends(get_db)):
+    # TODO 관리자만 가능하게 Auth추가
     users = service.get_all_users(db)
     return users
 
@@ -22,6 +23,7 @@ async def get_my_info(db: Session = Depends(get_db), token: str = Query()):
 
 @router.get("/{user_id}", response_model=schemas.UserBase)
 def get_user(db: Session = Depends(get_db), user_id: str = Path()):
+    # TODO 관리자만 가능하게 Auth추가
     user = service.get_user(db, user_id)
     return user
 
