@@ -3,9 +3,10 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 
 from typing import Optional
+import os
 
-# TODO 배포 후 시스템에 저장하여 가져올 예정
-SECRET_KEY = "c158f095ebd97a6aa72f82cee96981b61b99d69e2404f8217ca6525a59506c52"
+# 시스템에 저장
+SECRET_KEY = os.environ.get("JWT_SECRET").__str__()
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
