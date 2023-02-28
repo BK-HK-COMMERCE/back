@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, Body, Path
+from fastapi import APIRouter, Depends, Body, Path, Query
 from sqlalchemy.orm import Session
 
 from database import get_db
-from src.users import service, schemas
+from src.users import service, schemas, utils
 router = APIRouter(
     prefix="/users",
     tags=["users"]
@@ -13,6 +13,11 @@ router = APIRouter(
 def get_all_users(db: Session = Depends(get_db)):
     users = service.get_all_users(db)
     return users
+
+
+@router.get("/me", response_model=schemas.UserBase)
+async def get_my_info(db: Session = Depends(get_db), token: str = Query()):
+    return service.get_current_user(db, token)
 
 
 @router.get("/{user_id}", response_model=schemas.UserBase)

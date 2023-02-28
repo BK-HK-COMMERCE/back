@@ -2,7 +2,6 @@ from sqlalchemy.orm import Session
 from models import User
 from src.users import schemas, utils, exceptions
 from fastapi.encoders import jsonable_encoder
-
 import datetime
 
 
@@ -70,5 +69,17 @@ def login(db: Session, login_input: schemas.LoginInput):
 
     token = schemas.Token(**data)
 
-    # TODO token으로 변경할 예정
+    # token으로 변경
     return utils.create_access_token(token, None)
+
+
+def get_current_user(db: Session, token: str):
+    """
+    토큰 전송하여 현재 사용자 불러오기
+    :param db:
+    :param token:
+    :return:
+    """
+    payload = utils.get_current_user_by_token(token)
+    return get_user(db, payload.get("user_id"))
+

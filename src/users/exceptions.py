@@ -8,3 +8,9 @@ def user_not_found():
 def login_fail():
     return HTTPException(status.HTTP_401_UNAUTHORIZED, "Login failed")
 
+def credential_exception():
+    return HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
