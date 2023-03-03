@@ -34,10 +34,3 @@ def create_user(db: Session = Depends(get_db), user_base: schemas.UserBaseInput 
     return {"response": db_user}
 
 
-@router.post("/login")
-def login(db: Session = Depends(get_db), login_input: schemas.LoginInput = Body()):
-    token = service.login(db, login_input)
-    return {"token": token}
-
-
-
