@@ -48,3 +48,13 @@ class Image(Base):
     thumbnail = Column(Boolean, default=False, nullable=False)
 
     product = relationship("Product", back_populates="images")
+
+
+class Cart(Base):
+    __tablename__ = "CARTS"
+
+    index_no = Column(Integer, primary_key=True)
+    user_id = Column(String, nullable=False)
+    product_index = Column(Integer, ForeignKey("PRODUCTS.index_no"), nullable=False)
+    quantity = Column(Integer, default=1, nullable=False)
+    # product = relationship("Product", back_populates="carts")

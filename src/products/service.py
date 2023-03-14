@@ -115,3 +115,16 @@ def like_product(db: Session, index_no: int):
     db.refresh(db_product)
     return db_product
 
+
+def get_by_uuid(db: Session, uuid: str) -> Product:
+    """
+    uuid로 Product 조회
+    :param db:
+    :param uuid:
+    :return:
+    """
+    db_product = db.query(Product).filter(Product.uuid == uuid).first()
+    if not db_product:
+        raise product_not_found()
+    return db_product
+
