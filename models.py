@@ -57,4 +57,4 @@ class Cart(Base):
     user_id = Column(String, nullable=False)
     product_index = Column(Integer, ForeignKey("PRODUCTS.index_no"), nullable=False)
     quantity = Column(Integer, default=1, nullable=False)
-    # product = relationship("Product", back_populates="carts")
+    product = relationship("Product", backref="carts",uselist=False)

@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, Query, Request, Body, Response
 from sqlalchemy.orm import Session
 from database import get_db
-from src.cart import service
+from src.cart import service, schemas
 router = APIRouter(
     prefix="/carts",
     tags=["carts"]
 )
 
 
-@router.get("/")
+@router.get("/",response_model=list[schemas.CartBase])
 def get_carts(db: Session = Depends(get_db),
               token: str = Query(default=None),
               request: Request = Request):
